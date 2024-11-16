@@ -45,11 +45,13 @@
             "5e13ef0e251ac89f",
             "86657a338622ef8d",
             "b577870f2cd9ac34",
-            "b1fa050b3d65483f"
+            "b1fa050b3d65483f",
+            "13c685b07e0ef3f5",
+            "b83f462fe9fc336a"
         ],
         "x": 874,
         "y": 19,
-        "w": 572,
+        "w": 592,
         "h": 182
     },
     {
@@ -301,7 +303,7 @@
         "z": "d3bafc4d888d1327",
         "g": "214bb5bb7c3c748a",
         "name": "Grafica",
-        "func": "// adquision de variables\nvar setPoint_Presion = global.get('setPoint_Presion')||-2;\nvar presion = global.get('presion')||-2;\nif(setPoint_Presion != -2 && presion != -2){\n    var msg = {};\n    var msg1 = {};\n    msg.payload = setPoint_Presion;\n    msg.topic = 'SetPoint Presión';\n    msg1.payload = presion;\n    msg1.topic = 'Presión';\n    node.status({fill:\"green\",shape:\"dot\",text:setPoint_Presion + ' psi'});\n    return [msg, msg1];\n}else {\n    node.status({fill:\"red\",shape:\"dot\",text:\"No Data\"});\n}\n",
+        "func": "// adquision de variables\nvar setPoint_Presion = global.get('setPoint_Presion')||-2;\nvar presion = global.get('presion')||-2;\nif(setPoint_Presion != -2 && presion != -2){\n    var msg = {};\n    var msg1 = {};\n    msg.payload = setPoint_Presion;\n    msg.topic = 'SetPoint Presión';\n    msg1.payload = 0.5;\n    msg1.topic = 'Presión';\n    node.status({fill:\"green\",shape:\"dot\",text:setPoint_Presion + ' psi'});\n    return [msg, msg1];\n}else {\n    node.status({fill:\"red\",shape:\"dot\",text:\"No Data\"});\n}\n",
         "outputs": 2,
         "noerr": 0,
         "initialize": "",
@@ -311,10 +313,12 @@
         "y": 60,
         "wires": [
             [
-                "2cc3886a218bfd36"
+                "2cc3886a218bfd36",
+                "13c685b07e0ef3f5"
             ],
             [
-                "2cc3886a218bfd36"
+                "2cc3886a218bfd36",
+                "b83f462fe9fc336a"
             ]
         ]
     },
@@ -724,5 +728,109 @@
         "x": 420,
         "y": 400,
         "wires": []
+    },
+    {
+        "id": "13c685b07e0ef3f5",
+        "type": "debug",
+        "z": "d3bafc4d888d1327",
+        "g": "214bb5bb7c3c748a",
+        "name": "debug 2",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1350,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "b83f462fe9fc336a",
+        "type": "debug",
+        "z": "d3bafc4d888d1327",
+        "g": "214bb5bb7c3c748a",
+        "name": "debug 3",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1360,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "40028da2e5251bd1",
+        "type": "function",
+        "z": "d3bafc4d888d1327",
+        "name": "PID",
+        "func": "//definicion de la clase PID\nclass PIDController {\n    constructor(Kp, Ki, Kd, minOutput = 0, maxOutput = 1) {\n        // Inicialización de las ganancias PID\n        this.Kp = Kp;\n        this.Ki = Ki;\n        this.Kd = Kd;\n\n        // Inicialización de las variables de estado\n        this.previousError = 0; // Error anterior\n        this.integral = 0;      // Integral acumulada\n\n        // Limites de la salida\n        this.minOutput = minOutput;\n        this.maxOutput = maxOutput;\n    }\n\n    // Método para actualizar las ganancias del PID\n    updateGains(Kp, Ki, Kd) {\n        this.Kp = Kp;\n        this.Ki = Ki;\n        this.Kd = Kd;\n    }\n\n    // Método para calcular el control PID\n    compute(reference, output) {\n        // Calcular el error\n        const error = reference - output;\n\n        // Calcular la parte proporcional\n        const P = this.Kp * error;\n\n        // Acumular el error para la parte integral\n        this.integral += error;  // Acumulación de error\n        const I = this.Ki * this.integral;\n\n        // Calcular la parte derivativa\n        const D = this.Kd * (error - this.previousError);\n\n        // Guardar el error actual para el siguiente ciclo\n        this.previousError = error;\n\n        // Salida sin escalización\n        let rawOutput = P + I + D;\n\n        // Escalizar la salida entre 0 y 1 (usando recorte o mapeo lineal)\n        let scaledOutput = this.scaleOutput(rawOutput);\n\n        return scaledOutput;\n    }\n\n    // Método para escalar la salida\n    scaleOutput(rawOutput) {\n        // Recorte de la salida entre el rango [0, 1]\n        return Math.min(Math.max(rawOutput, this.minOutput), this.maxOutput);\n    }\n}\n\n// codigo a utilizar\n// USO del controlador PID\nlet pid = new PIDController(1.0, 0.1, 0.0);  // Inicializamos el PID con algunas ganancias\n\nlet reference = 1.0;  // Valor deseado (referencia)\nlet output = 0.0;     // Salida inicial del sistema\n\nlet controlSignal = pid.compute(reference, output);\nmsg.payload = controlSignal; //retornar la salida de la accion de control de 0 a 1\nnode.status({fill:\"blue\",shape:\"dot\",text:\"Accion de control \" + controlSignal});\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 370,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3dfcc44a8bb60a4c",
+        "type": "inject",
+        "z": "d3bafc4d888d1327",
+        "name": "1s",
+        "props": [],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 250,
+        "y": 540,
+        "wires": [
+            [
+                "40028da2e5251bd1"
+            ]
+        ]
+    },
+    {
+        "id": "41bafb6a9265fe18",
+        "type": "function",
+        "z": "d3bafc4d888d1327",
+        "name": "Escalizacion de la Frecuencia",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ce084a61d788b557",
+        "type": "function",
+        "z": "d3bafc4d888d1327",
+        "name": "Planta Real",
+        "func": "// definicion de variables internas de la discretizacion\nvar yk1 = context.get('yk1','memoryOnly')||0;\nvar yk2 = context.get('yk2','memoryOnly')||0;\nvar uk = msg.payload;//entrada de la salida de frecuencia\nvar uk1 = context.get('uk1','memoryOnly')||0;\nvar uk2 = context.get('uk2','memoryOnly')||0;\n\nvar yk = 1.2315e-5*uk + 2.4629e-5*uk1 + 1.2315e-5*uk2 + 1.9702*yk1 - 0.9704*yk2 ;\n\n//guardar los estados anterirores\ncontext.set('yk2',yk1,'memoryOnly');\ncontext.set('yk1',yk,'memoryOnly');\ncontext.set('uk2', uk1,'memoryOnly');\ncontext.set('uk1', uk,'memoryOnly');\ncontext.set('uk',uk,'memoryOnly');\nnode.status({fill:\"blue\",shape:\"dot\",text:\"PIP \" + yk});\n\n// monitoreo de las variables\ncontext.set('monitoreo', {uk, yk},'memoryOnly');\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 910,
+        "y": 540,
+        "wires": [
+            []
+        ]
     }
 ]
