@@ -1,1 +1,728 @@
-[]
+[
+    {
+        "id": "d3bafc4d888d1327",
+        "type": "tab",
+        "label": "Control en la NUBE",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "e80ba914f330e4bf",
+        "type": "group",
+        "z": "d3bafc4d888d1327",
+        "name": "Ingreso de Datos HMI",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "6affae2739636fd4",
+            "e80a19e4ef29647c",
+            "ef27165957a2a7ce",
+            "9837c6631b22c877",
+            "497bb3a5985ccf6a",
+            "43afa594f96c4de1",
+            "b31d9258d5457c6b",
+            "d01294d76e015e0e",
+            "2597d26d4122589d"
+        ],
+        "x": 14,
+        "y": 19,
+        "w": 842,
+        "h": 242
+    },
+    {
+        "id": "214bb5bb7c3c748a",
+        "type": "group",
+        "z": "d3bafc4d888d1327",
+        "name": "Grafica de Tendencia",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "2cc3886a218bfd36",
+            "bacdb831509bd076",
+            "5e13ef0e251ac89f",
+            "86657a338622ef8d",
+            "b577870f2cd9ac34",
+            "b1fa050b3d65483f"
+        ],
+        "x": 874,
+        "y": 19,
+        "w": 572,
+        "h": 182
+    },
+    {
+        "id": "db0763cc983c9bdb",
+        "type": "group",
+        "z": "d3bafc4d888d1327",
+        "name": "Lazo de Control PID",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "dba342f4.8c29e",
+            "1d0ad6849f56b3db",
+            "822289ee0d9e21b6",
+            "a8ba34796b55aa64",
+            "1cf6a8bfce54fbe5",
+            "80f84f7f49f12025"
+        ],
+        "x": 24,
+        "y": 279,
+        "w": 802,
+        "h": 162
+    },
+    {
+        "id": "83028f5fc4af6c91",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "5aaaf04bcb7e61c3",
+        "type": "ui_tab",
+        "name": "Principal",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "0babc20c7149c07a",
+        "type": "ui_tab",
+        "name": "Configuracion",
+        "icon": "dashboard",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "d5468e5220cc968f",
+        "type": "ui_group",
+        "name": "Pantalla",
+        "tab": "0babc20c7149c07a",
+        "order": 1,
+        "disp": false,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "88cb12c1a31a6f43",
+        "type": "ui_group",
+        "name": "Pantalla",
+        "tab": "5aaaf04bcb7e61c3",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "2cc3886a218bfd36",
+        "type": "ui_chart",
+        "z": "d3bafc4d888d1327",
+        "g": "214bb5bb7c3c748a",
+        "name": "",
+        "group": "88cb12c1a31a6f43",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "Tendencia",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "1",
+        "removeOlder": "1",
+        "removeOlderPoints": "200",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#00ff00",
+            "#0080ff",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1350,
+        "y": 120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "bacdb831509bd076",
+        "type": "function",
+        "z": "d3bafc4d888d1327",
+        "g": "214bb5bb7c3c748a",
+        "name": "Limpiar Grafica",
+        "func": "msg.payload = []\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1180,
+        "y": 160,
+        "wires": [
+            [
+                "2cc3886a218bfd36"
+            ]
+        ]
+    },
+    {
+        "id": "5e13ef0e251ac89f",
+        "type": "inject",
+        "z": "d3bafc4d888d1327",
+        "g": "214bb5bb7c3c748a",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 1030,
+        "y": 120,
+        "wires": [
+            [
+                "bacdb831509bd076"
+            ]
+        ]
+    },
+    {
+        "id": "86657a338622ef8d",
+        "type": "function",
+        "z": "d3bafc4d888d1327",
+        "g": "214bb5bb7c3c748a",
+        "name": "Grafica",
+        "func": "// adquision de variables\nvar setPoint_Presion = global.get('setPoint_Presion')||-2;\nvar presion = global.get('presion')||-2;\nif(setPoint_Presion != -2 && presion != -2){\n    var msg = {};\n    var msg1 = {};\n    msg.payload = setPoint_Presion;\n    msg.topic = 'SetPoint Presión';\n    msg1.payload = presion;\n    msg1.topic = 'Presión';\n    node.status({fill:\"green\",shape:\"dot\",text:setPoint_Presion + ' psi'});\n    return [msg, msg1];\n}else {\n    node.status({fill:\"red\",shape:\"dot\",text:\"No Data\"});\n}\n",
+        "outputs": 2,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1200,
+        "y": 60,
+        "wires": [
+            [
+                "2cc3886a218bfd36"
+            ],
+            [
+                "2cc3886a218bfd36"
+            ]
+        ]
+    },
+    {
+        "id": "b577870f2cd9ac34",
+        "type": "inject",
+        "z": "d3bafc4d888d1327",
+        "g": "214bb5bb7c3c748a",
+        "name": "",
+        "props": [],
+        "repeat": "2",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 1030,
+        "y": 60,
+        "wires": [
+            [
+                "86657a338622ef8d"
+            ]
+        ]
+    },
+    {
+        "id": "b1fa050b3d65483f",
+        "type": "ui_button",
+        "z": "d3bafc4d888d1327",
+        "g": "214bb5bb7c3c748a",
+        "name": "",
+        "group": "88cb12c1a31a6f43",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Limpiar Tendencia",
+        "tooltip": "",
+        "color": "white",
+        "bgcolor": "red",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 990,
+        "y": 160,
+        "wires": [
+            [
+                "bacdb831509bd076"
+            ]
+        ]
+    },
+    {
+        "id": "6affae2739636fd4",
+        "type": "ui_slider",
+        "z": "d3bafc4d888d1327",
+        "g": "e80ba914f330e4bf",
+        "name": "",
+        "label": "SetPoint de Presión",
+        "tooltip": "",
+        "group": "d5468e5220cc968f",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "all",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "1",
+        "step": "0.1",
+        "className": "",
+        "x": 420,
+        "y": 60,
+        "wires": [
+            [
+                "9837c6631b22c877",
+                "497bb3a5985ccf6a"
+            ]
+        ]
+    },
+    {
+        "id": "e80a19e4ef29647c",
+        "type": "ui_button",
+        "z": "d3bafc4d888d1327",
+        "g": "e80ba914f330e4bf",
+        "name": "",
+        "group": "d5468e5220cc968f",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Aceptar",
+        "tooltip": "",
+        "color": "white",
+        "bgcolor": "green",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 380,
+        "y": 140,
+        "wires": [
+            [
+                "43afa594f96c4de1",
+                "b31d9258d5457c6b"
+            ]
+        ]
+    },
+    {
+        "id": "ef27165957a2a7ce",
+        "type": "ui_button",
+        "z": "d3bafc4d888d1327",
+        "g": "e80ba914f330e4bf",
+        "name": "",
+        "group": "d5468e5220cc968f",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Rechazar",
+        "tooltip": "",
+        "color": "white",
+        "bgcolor": "red",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 380,
+        "y": 180,
+        "wires": [
+            [
+                "b31d9258d5457c6b"
+            ]
+        ]
+    },
+    {
+        "id": "d01294d76e015e0e",
+        "type": "inject",
+        "z": "d3bafc4d888d1327",
+        "g": "e80ba914f330e4bf",
+        "name": "Inicializar Variables",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "",
+        "x": 150,
+        "y": 180,
+        "wires": [
+            [
+                "2597d26d4122589d",
+                "b31d9258d5457c6b"
+            ]
+        ]
+    },
+    {
+        "id": "2597d26d4122589d",
+        "type": "function",
+        "z": "d3bafc4d888d1327",
+        "g": "e80ba914f330e4bf",
+        "name": "function 2",
+        "func": "var setPoint_Presion = global.get('setPoint_Presion')||-2;\nif(setPoint_Presion == -2){\n    global.set('setPoint_Presion',1);\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9837c6631b22c877",
+        "type": "change",
+        "z": "d3bafc4d888d1327",
+        "g": "e80ba914f330e4bf",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "SetPoint_PID_Presion_AUX",
+                "pt": "flow",
+                "to": "payload",
+                "tot": "msg",
+                "dc": true
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 690,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "497bb3a5985ccf6a",
+        "type": "ui_text",
+        "z": "d3bafc4d888d1327",
+        "g": "e80ba914f330e4bf",
+        "group": "d5468e5220cc968f",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "SetPoint Text",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 610,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "43afa594f96c4de1",
+        "type": "change",
+        "z": "d3bafc4d888d1327",
+        "g": "e80ba914f330e4bf",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "setPoint_Presion",
+                "pt": "global",
+                "to": "SetPoint_PID_Presion_AUX",
+                "tot": "flow",
+                "dc": true
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 580,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b31d9258d5457c6b",
+        "type": "change",
+        "z": "d3bafc4d888d1327",
+        "g": "e80ba914f330e4bf",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "setPoint_Presion",
+                "tot": "global",
+                "dc": true
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 220,
+        "y": 60,
+        "wires": [
+            [
+                "6affae2739636fd4"
+            ]
+        ]
+    },
+    {
+        "id": "dba342f4.8c29e",
+        "type": "function",
+        "z": "d3bafc4d888d1327",
+        "g": "db0763cc983c9bdb",
+        "name": "plant",
+        "func": "var entrada = msg.payload;//Entrada del control\nvar salida_anterior = context.get(\"salida_ant\")||0;\nvar salida = context.get(\"salida\")||0;\nvar Theta = 0.349066; //% 20 grados \nvar pi = 3.1416;\nvar p = 62.43 ;\nvar Ts = 0.1 ;\nvar Cd = 0.6;\nvar L = 0.328084 ; // %ft o 10 cm\nvar R = 0.019685/2 ; //%D = 6.25 mm \nvar g = 32.16;\nvar h_bar = 0.4; //%ft\nvar Ao = pi*R^2;\n//var qmi = p*Cd*Ao*Math.pow(2*g*h_bar, 0.5); // ft^3/s flujo volumetrico\nvar qmi = 0.0578; // ft^3/s flujo volumetrico\n//var k2 = Cd*Ao*Math.pow(2*g,0.5);\nvar k2 = 0.0015;\nvar k1 = 2*L*Math.tan(Theta);\nif(salida>0)\n{\n    salida =  ( salida_anterior+(Ts)*(entrada/p -k2*(salida_anterior))/(k1*salida_anterior));\n    salida = redondearADecimales(salida);\n    if(salida>1){\n        salida = 1;\n        }\n        else if(salida<=0){\n            salida = 0.01;\n        }\n        \n    context.set(\"salida\", salida);\n    context.set(\"salida_ant\", salida);\n    msg.payload = salida ; // show lv tank  \n    node.status({fill:\"blue\",shape:\"dot\",text:\"presion \" + salida});\n}\nreturn msg;\n\nfunction redondearADecimales(valor) {\n    // Verificar si el valor es numérico\n    if (typeof valor === 'number' && !isNaN(valor)) {\n        // Redondear el valor a 3 decimales\n        return parseFloat(valor.toFixed(3));\n    } else {\n        // Devolver 0 si el valor no es numérico\n        return 0;\n    }\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 320,
+        "wires": [
+            [
+                "a8ba34796b55aa64",
+                "80f84f7f49f12025"
+            ]
+        ]
+    },
+    {
+        "id": "1d0ad6849f56b3db",
+        "type": "function",
+        "z": "d3bafc4d888d1327",
+        "g": "db0763cc983c9bdb",
+        "name": "controller",
+        "func": "var err = msg.payload ;//error\nvar err_ant = context.get(\"err_ant\")||0;//error -1\nvar out_ant = context.get(\"ctr_ant\")||0;//controller -1\n\nvar ctr = 0;\nvar a0 = 1;\nvar a1 = 0;\nvar b0 = 5;\nvar b1 = 0.049651*5;\nvar T = 0.1;\nvar k_t = 2/T;\nvar aux_1 = (b0*k_t+b1)/(a0*k_t+a1);\nvar aux_2 = (-b0*k_t+b1)/(a0*k_t+a1);\nvar aux_3 = (-a0*k_t+a1)/(a0*k_t+a1);\n//% Variables Controlador PI\n//%           5(s+0.049651)\n//%  C(s) = ------------------\n//%                 s\n\nctr = (4.9443*err-4.7499*err_ant) + out_ant;\nctr = (aux_1 * err + aux_2*err_ant - aux_3* out_ant);//%c2d Tustin\ncontext.set(\"ctr_ant\",ctr);\ncontext.set(\"err_ant\",err);\nmsg.payload = ctr ; // show action controller\nnode.status({fill:\"red\",shape:\"ring\",text:\"ctr \"+ctr});\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 320,
+        "wires": [
+            [
+                "dba342f4.8c29e"
+            ]
+        ]
+    },
+    {
+        "id": "822289ee0d9e21b6",
+        "type": "inject",
+        "z": "d3bafc4d888d1327",
+        "g": "db0763cc983c9bdb",
+        "name": "",
+        "props": [],
+        "repeat": "0.5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 120,
+        "y": 320,
+        "wires": [
+            [
+                "1cf6a8bfce54fbe5"
+            ]
+        ]
+    },
+    {
+        "id": "a8ba34796b55aa64",
+        "type": "change",
+        "z": "d3bafc4d888d1327",
+        "g": "db0763cc983c9bdb",
+        "name": "presion",
+        "rules": [
+            {
+                "t": "set",
+                "p": "presion",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg",
+                "dc": true
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 740,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1cf6a8bfce54fbe5",
+        "type": "function",
+        "z": "d3bafc4d888d1327",
+        "g": "db0763cc983c9bdb",
+        "name": "error",
+        "func": "var setPoint_Presion = global.get('setPoint_Presion')||-2;\nvar presion = global.get('presion')||0;\nif(setPoint_Presion != -2){\n    // calculo del error \n    var error = setPoint_Presion - presion;\n    msg.payload = error;\n    //guardar el error en variable global\n    global.set('error',error);\n    return msg;\n}",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 250,
+        "y": 320,
+        "wires": [
+            [
+                "1d0ad6849f56b3db"
+            ]
+        ]
+    },
+    {
+        "id": "80f84f7f49f12025",
+        "type": "debug",
+        "z": "d3bafc4d888d1327",
+        "g": "db0763cc983c9bdb",
+        "name": "debug 1",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 420,
+        "y": 400,
+        "wires": []
+    }
+]
