@@ -65,14 +65,13 @@
         "nodes": [
             "dba342f4.8c29e",
             "1d0ad6849f56b3db",
-            "822289ee0d9e21b6",
             "a8ba34796b55aa64",
             "1cf6a8bfce54fbe5",
             "80f84f7f49f12025"
         ],
-        "x": 24,
+        "x": 174,
         "y": 279,
-        "w": 802,
+        "w": 652,
         "h": 162
     },
     {
@@ -182,19 +181,10 @@
         "hidden": false
     },
     {
-        "id": "0babc20c7149c07a",
-        "type": "ui_tab",
-        "name": "Configuracion",
-        "icon": "dashboard",
-        "order": 2,
-        "disabled": false,
-        "hidden": false
-    },
-    {
         "id": "d5468e5220cc968f",
         "type": "ui_group",
         "name": "Pantalla",
-        "tab": "0babc20c7149c07a",
+        "tab": "5aaaf04bcb7e61c3",
         "order": 1,
         "disp": false,
         "width": "12",
@@ -204,11 +194,11 @@
     {
         "id": "88cb12c1a31a6f43",
         "type": "ui_group",
-        "name": "Pantalla",
+        "name": "Botones",
         "tab": "5aaaf04bcb7e61c3",
         "order": 1,
-        "disp": true,
-        "width": "6",
+        "disp": false,
+        "width": "12",
         "collapse": false,
         "className": ""
     },
@@ -230,7 +220,7 @@
         "nodata": "",
         "dot": false,
         "ymin": "0",
-        "ymax": "1",
+        "ymax": "250",
         "removeOlder": "1",
         "removeOlderPoints": "200",
         "removeOlderUnit": "60",
@@ -303,7 +293,7 @@
         "z": "d3bafc4d888d1327",
         "g": "214bb5bb7c3c748a",
         "name": "Grafica",
-        "func": "// adquision de variables\nvar setPoint_Presion = global.get('setPoint_Presion')||-2;\nvar presion = global.get('presion')||-2;\nif(setPoint_Presion != -2 && presion != -2){\n    var msg = {};\n    var msg1 = {};\n    msg.payload = setPoint_Presion;\n    msg.topic = 'SetPoint Presión';\n    msg1.payload = 0.5;\n    msg1.topic = 'Presión';\n    node.status({fill:\"green\",shape:\"dot\",text:setPoint_Presion + ' psi'});\n    return [msg, msg1];\n}else {\n    node.status({fill:\"red\",shape:\"dot\",text:\"No Data\"});\n}\n",
+        "func": "// adquision de variables\nvar setPoint_Presion = global.get('setPoint_Presion')||-2;\nvar presion = global.get('presion')||-2;\nif(setPoint_Presion != -2 && presion != -2){\n    var msg = {};\n    var msg1 = {};\n    msg.payload = setPoint_Presion;\n    msg.topic = 'SetPoint Presión';\n    msg1.payload = presion;\n    msg1.topic = 'Presión';\n    node.status({fill:\"green\",shape:\"dot\",text:setPoint_Presion + ' psi'});\n    return [msg, msg1];\n}else {\n    node.status({fill:\"red\",shape:\"dot\",text:\"No Data\"});\n}\n",
         "outputs": 2,
         "noerr": 0,
         "initialize": "",
@@ -387,9 +377,9 @@
         "outs": "all",
         "topic": "topic",
         "topicType": "msg",
-        "min": 0,
-        "max": "1",
-        "step": "0.1",
+        "min": "200",
+        "max": "250",
+        "step": "1",
         "className": "",
         "x": 420,
         "y": 60,
@@ -619,7 +609,6 @@
         "y": 320,
         "wires": [
             [
-                "a8ba34796b55aa64",
                 "80f84f7f49f12025"
             ]
         ]
@@ -641,26 +630,6 @@
         "wires": [
             [
                 "dba342f4.8c29e"
-            ]
-        ]
-    },
-    {
-        "id": "822289ee0d9e21b6",
-        "type": "inject",
-        "z": "d3bafc4d888d1327",
-        "g": "db0763cc983c9bdb",
-        "name": "",
-        "props": [],
-        "repeat": "0.5",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 120,
-        "y": 320,
-        "wires": [
-            [
-                "1cf6a8bfce54fbe5"
             ]
         ]
     },
@@ -768,7 +737,7 @@
         "type": "function",
         "z": "d3bafc4d888d1327",
         "name": "PID",
-        "func": "//definicion de la clase PID\nclass PIDController {\n    constructor(Kp, Ki, Kd, minOutput = 0, maxOutput = 1) {\n        // Inicialización de las ganancias PID\n        this.Kp = Kp;\n        this.Ki = Ki;\n        this.Kd = Kd;\n\n        // Inicialización de las variables de estado\n        this.previousError = 0; // Error anterior\n        this.integral = 0;      // Integral acumulada\n\n        // Limites de la salida\n        this.minOutput = minOutput;\n        this.maxOutput = maxOutput;\n    }\n\n    // Método para actualizar las ganancias del PID\n    updateGains(Kp, Ki, Kd) {\n        this.Kp = Kp;\n        this.Ki = Ki;\n        this.Kd = Kd;\n    }\n\n    // Método para calcular el control PID\n    compute(reference, output) {\n        // Calcular el error\n        const error = reference - output;\n\n        // Calcular la parte proporcional\n        const P = this.Kp * error;\n\n        // Acumular el error para la parte integral\n        this.integral += error;  // Acumulación de error\n        const I = this.Ki * this.integral;\n\n        // Calcular la parte derivativa\n        const D = this.Kd * (error - this.previousError);\n\n        // Guardar el error actual para el siguiente ciclo\n        this.previousError = error;\n\n        // Salida sin escalización\n        let rawOutput = P + I + D;\n\n        // Escalizar la salida entre 0 y 1 (usando recorte o mapeo lineal)\n        let scaledOutput = this.scaleOutput(rawOutput);\n\n        return scaledOutput;\n    }\n\n    // Método para escalar la salida\n    scaleOutput(rawOutput) {\n        // Recorte de la salida entre el rango [0, 1]\n        return Math.min(Math.max(rawOutput, this.minOutput), this.maxOutput);\n    }\n}\n\n// codigo a utilizar\n// USO del controlador PID\nlet pid = new PIDController(1.0, 0.1, 0.0);  // Inicializamos el PID con algunas ganancias\n\nlet reference = 1.0;  // Valor deseado (referencia)\nlet output = 0.0;     // Salida inicial del sistema\n\nlet controlSignal = pid.compute(reference, output);\nmsg.payload = controlSignal; //retornar la salida de la accion de control de 0 a 1\nnode.status({fill:\"blue\",shape:\"dot\",text:\"Accion de control \" + controlSignal});\n\nreturn msg;",
+        "func": "//definicion de la clase PID\nclass PIDController {\n    constructor(Kp, Ki, Kd, minOutput = 0, maxOutput = 1) {\n        // Inicialización de las ganancias PID\n        this.Kp = Kp;\n        this.Ki = Ki;\n        this.Kd = Kd;\n\n        // Inicialización de las variables de estado\n        this.previousError = 0; // Error anterior\n        this.integral = 0;      // Integral acumulada\n\n        // Limites de la salida\n        this.minOutput = minOutput;\n        this.maxOutput = maxOutput;\n    }\n\n    // Método para actualizar las ganancias del PID\n    updateGains(Kp, Ki, Kd) {\n        this.Kp = Kp;\n        this.Ki = Ki;\n        this.Kd = Kd;\n    }\n\n    // Método para calcular el control PID\n    compute(reference, output) {\n        // Calcular el error\n        const error = reference - output;\n\n        // Calcular la parte proporcional\n        const P = this.Kp * error;\n\n        // Acumular el error para la parte integral\n        this.integral += error;  // Acumulación de error\n        const I = this.Ki * this.integral;\n\n        // Calcular la parte derivativa\n        const D = this.Kd * (error - this.previousError);\n\n        // Guardar el error actual para el siguiente ciclo\n        this.previousError = error;\n\n        // Salida sin escalización\n        let rawOutput = P + I + D;\n\n        // Escalizar la salida entre 0 y 1 (usando recorte o mapeo lineal)\n        let scaledOutput = this.scaleOutput(rawOutput);\n\n        return scaledOutput;\n    }\n\n    // Método para escalar la salida\n    scaleOutput(rawOutput) {\n        // Recorte de la salida entre el rango [0, 1]\n        return Math.min(Math.max(rawOutput, this.minOutput), this.maxOutput);\n    }\n}\n\n// codigo a utilizar\n// USO del controlador PID\nvar pid = new PIDController(1.0, 0.1, 0.0);  // Inicializamos el PID con algunas ganancias\n\nvar reference = global.get('setPoint_Presion')||0;  // Valor deseado (referencia)\nvar output = global.get('presion') || 0;  //// Salida inicial del sistema\n \nlet controlSignal = pid.compute(reference, output);\nmsg.payload = controlSignal; //retornar la salida de la accion de control de 0 a 1\nnode.status({fill:\"blue\",shape:\"dot\",text:\"Accion de control \" + controlSignal});\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -777,21 +746,23 @@
         "x": 370,
         "y": 540,
         "wires": [
-            []
+            [
+                "41bafb6a9265fe18"
+            ]
         ]
     },
     {
         "id": "3dfcc44a8bb60a4c",
         "type": "inject",
         "z": "d3bafc4d888d1327",
-        "name": "1s",
+        "name": "0.01",
         "props": [],
-        "repeat": "1",
+        "repeat": "0.01",
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 250,
+        "x": 230,
         "y": 540,
         "wires": [
             [
@@ -804,16 +775,18 @@
         "type": "function",
         "z": "d3bafc4d888d1327",
         "name": "Escalizacion de la Frecuencia",
-        "func": "\nreturn msg;",
+        "func": "function escalarARPM(valor, rpmMin = 800, rpmMax = 1200) {\n    // Aplicar la fórmula para escalar el valor\n    var rpm = rpmMin + valor * (rpmMax - rpmMin);\n    // Redondear el valor de RPM al número entero más cercano\n    return Math.round(rpm);\n}\nvar entradaPID = msg.payload;\nmsg.payload = escalarARPM(entradaPID,800,1200);\nnode.status({fill:\"blue\",shape:\"dot\",text:\"Entrada :\" + entradaPID + ' Salida : ' + msg.payload});\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 610,
+        "x": 710,
         "y": 540,
         "wires": [
-            []
+            [
+                "ce084a61d788b557"
+            ]
         ]
     },
     {
@@ -821,13 +794,13 @@
         "type": "function",
         "z": "d3bafc4d888d1327",
         "name": "Planta Real",
-        "func": "// definicion de variables internas de la discretizacion\nvar yk1 = context.get('yk1','memoryOnly')||0;\nvar yk2 = context.get('yk2','memoryOnly')||0;\nvar uk = msg.payload;//entrada de la salida de frecuencia\nvar uk1 = context.get('uk1','memoryOnly')||0;\nvar uk2 = context.get('uk2','memoryOnly')||0;\n\nvar yk = 1.2315e-5*uk + 2.4629e-5*uk1 + 1.2315e-5*uk2 + 1.9702*yk1 - 0.9704*yk2 ;\n\n//guardar los estados anterirores\ncontext.set('yk2',yk1,'memoryOnly');\ncontext.set('yk1',yk,'memoryOnly');\ncontext.set('uk2', uk1,'memoryOnly');\ncontext.set('uk1', uk,'memoryOnly');\ncontext.set('uk',uk,'memoryOnly');\nnode.status({fill:\"blue\",shape:\"dot\",text:\"PIP \" + yk});\n\n// monitoreo de las variables\ncontext.set('monitoreo', {uk, yk},'memoryOnly');\n\nreturn msg;",
+        "func": "// definicion de variables internas de la discretizacion\nvar yk1 = context.get('yk1','memoryOnly')||0;\nvar yk2 = context.get('yk2','memoryOnly')||0;\nvar uk = msg.payload;//entrada de la salida de frecuencia\nvar uk1 = context.get('uk1','memoryOnly')||0;\nvar uk2 = context.get('uk2','memoryOnly')||0;\n\nvar yk = 1.2315e-5*uk + 2.4629e-5*uk1 + 1.2315e-5*uk2 + 1.9702*yk1 - 0.9704*yk2 ; // con tiempo de 0.01\n\n//guardar los estados anterirores\ncontext.set('yk2',yk1,'memoryOnly');\ncontext.set('yk1',yk,'memoryOnly');\ncontext.set('uk2', uk1,'memoryOnly');\ncontext.set('uk1', uk,'memoryOnly');\ncontext.set('uk',uk,'memoryOnly');\nnode.status({fill:\"blue\",shape:\"dot\",text:\"PIP \" + yk});\nglobal.set('presion',yk);\n// monitoreo de las variables\ncontext.set('monitoreo', {uk, yk},'memoryOnly');\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 910,
+        "x": 950,
         "y": 540,
         "wires": [
             []
