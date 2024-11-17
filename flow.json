@@ -55,24 +55,47 @@
         "h": 182
     },
     {
-        "id": "db0763cc983c9bdb",
+        "id": "c1a6fea6327391ca",
         "type": "group",
         "z": "d3bafc4d888d1327",
-        "name": "Lazo de Control PID",
+        "name": "Enviar data a la Nube",
         "style": {
-            "label": true
+            "label": true,
+            "stroke": "#000000",
+            "color": "#000000"
         },
         "nodes": [
-            "dba342f4.8c29e",
-            "1d0ad6849f56b3db",
-            "a8ba34796b55aa64",
-            "1cf6a8bfce54fbe5",
-            "80f84f7f49f12025"
+            "6b4aadc25a0128ce",
+            "ccad51975c96c09f",
+            "e0a986db8a783db1",
+            "0d5261c134f74a45",
+            "8df15cca59401082"
         ],
-        "x": 174,
+        "x": 14,
         "y": 279,
         "w": 652,
-        "h": 162
+        "h": 142
+    },
+    {
+        "id": "4e95e1e89e159a2c",
+        "type": "group",
+        "z": "d3bafc4d888d1327",
+        "name": "Planta",
+        "style": {
+            "label": true,
+            "stroke": "#000000",
+            "color": "#000000"
+        },
+        "nodes": [
+            "40028da2e5251bd1",
+            "3dfcc44a8bb60a4c",
+            "41bafb6a9265fe18",
+            "ce084a61d788b557"
+        ],
+        "x": 14,
+        "y": 439,
+        "w": 772,
+        "h": 82
     },
     {
         "id": "83028f5fc4af6c91",
@@ -203,6 +226,48 @@
         "className": ""
     },
     {
+        "id": "a6eb8721741008d0",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "b0b5f6d17e4ee7ed2f3d765054e8785e02f5583d8b130eef6e704d8fd403d4ae-certificate.pem.crt",
+        "keyname": "b0b5f6d17e4ee7ed2f3d765054e8785e02f5583d8b130eef6e704d8fd403d4ae-private.pem.key",
+        "caname": "AmazonRootCA1.pem",
+        "servername": "",
+        "verifyservercert": true,
+        "alpnprotocol": ""
+    },
+    {
+        "id": "2cfeb892b2531fe4",
+        "type": "mqtt-broker",
+        "name": "MQTT",
+        "broker": "a2jc4862ggr0zs-ats.iot.us-east-2.amazonaws.com",
+        "port": "8883",
+        "tls": "a6eb8721741008d0",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
         "id": "2cc3886a218bfd36",
         "type": "ui_chart",
         "z": "d3bafc4d888d1327",
@@ -220,15 +285,15 @@
         "nodata": "",
         "dot": false,
         "ymin": "0",
-        "ymax": "250",
-        "removeOlder": "1",
+        "ymax": "300",
+        "removeOlder": "2",
         "removeOlderPoints": "200",
         "removeOlderUnit": "60",
         "cutout": 0,
         "useOneColor": false,
         "useUTC": false,
         "colors": [
-            "#00ff00",
+            "#ff0000",
             "#0080ff",
             "#ff7f0e",
             "#2ca02c",
@@ -339,7 +404,7 @@
         "g": "214bb5bb7c3c748a",
         "name": "",
         "group": "88cb12c1a31a6f43",
-        "order": 1,
+        "order": 2,
         "width": 0,
         "height": 0,
         "passthru": false,
@@ -594,111 +659,6 @@
         ]
     },
     {
-        "id": "dba342f4.8c29e",
-        "type": "function",
-        "z": "d3bafc4d888d1327",
-        "g": "db0763cc983c9bdb",
-        "name": "plant",
-        "func": "var entrada = msg.payload;//Entrada del control\nvar salida_anterior = context.get(\"salida_ant\")||0;\nvar salida = context.get(\"salida\")||0;\nvar Theta = 0.349066; //% 20 grados \nvar pi = 3.1416;\nvar p = 62.43 ;\nvar Ts = 0.1 ;\nvar Cd = 0.6;\nvar L = 0.328084 ; // %ft o 10 cm\nvar R = 0.019685/2 ; //%D = 6.25 mm \nvar g = 32.16;\nvar h_bar = 0.4; //%ft\nvar Ao = pi*R^2;\n//var qmi = p*Cd*Ao*Math.pow(2*g*h_bar, 0.5); // ft^3/s flujo volumetrico\nvar qmi = 0.0578; // ft^3/s flujo volumetrico\n//var k2 = Cd*Ao*Math.pow(2*g,0.5);\nvar k2 = 0.0015;\nvar k1 = 2*L*Math.tan(Theta);\nif(salida>0)\n{\n    salida =  ( salida_anterior+(Ts)*(entrada/p -k2*(salida_anterior))/(k1*salida_anterior));\n    salida = redondearADecimales(salida);\n    if(salida>1){\n        salida = 1;\n        }\n        else if(salida<=0){\n            salida = 0.01;\n        }\n        \n    context.set(\"salida\", salida);\n    context.set(\"salida_ant\", salida);\n    msg.payload = salida ; // show lv tank  \n    node.status({fill:\"blue\",shape:\"dot\",text:\"presion \" + salida});\n}\nreturn msg;\n\nfunction redondearADecimales(valor) {\n    // Verificar si el valor es numérico\n    if (typeof valor === 'number' && !isNaN(valor)) {\n        // Redondear el valor a 3 decimales\n        return parseFloat(valor.toFixed(3));\n    } else {\n        // Devolver 0 si el valor no es numérico\n        return 0;\n    }\n}",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 530,
-        "y": 320,
-        "wires": [
-            [
-                "80f84f7f49f12025"
-            ]
-        ]
-    },
-    {
-        "id": "1d0ad6849f56b3db",
-        "type": "function",
-        "z": "d3bafc4d888d1327",
-        "g": "db0763cc983c9bdb",
-        "name": "controller",
-        "func": "var err = msg.payload ;//error\nvar err_ant = context.get(\"err_ant\")||0;//error -1\nvar out_ant = context.get(\"ctr_ant\")||0;//controller -1\n\nvar ctr = 0;\nvar a0 = 1;\nvar a1 = 0;\nvar b0 = 5;\nvar b1 = 0.049651*5;\nvar T = 0.1;\nvar k_t = 2/T;\nvar aux_1 = (b0*k_t+b1)/(a0*k_t+a1);\nvar aux_2 = (-b0*k_t+b1)/(a0*k_t+a1);\nvar aux_3 = (-a0*k_t+a1)/(a0*k_t+a1);\n//% Variables Controlador PI\n//%           5(s+0.049651)\n//%  C(s) = ------------------\n//%                 s\n\nctr = (4.9443*err-4.7499*err_ant) + out_ant;\nctr = (aux_1 * err + aux_2*err_ant - aux_3* out_ant);//%c2d Tustin\ncontext.set(\"ctr_ant\",ctr);\ncontext.set(\"err_ant\",err);\nmsg.payload = ctr ; // show action controller\nnode.status({fill:\"red\",shape:\"ring\",text:\"ctr \"+ctr});\nreturn msg;\n",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 380,
-        "y": 320,
-        "wires": [
-            [
-                "dba342f4.8c29e"
-            ]
-        ]
-    },
-    {
-        "id": "a8ba34796b55aa64",
-        "type": "change",
-        "z": "d3bafc4d888d1327",
-        "g": "db0763cc983c9bdb",
-        "name": "presion",
-        "rules": [
-            {
-                "t": "set",
-                "p": "presion",
-                "pt": "global",
-                "to": "payload",
-                "tot": "msg",
-                "dc": true
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 740,
-        "y": 320,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "1cf6a8bfce54fbe5",
-        "type": "function",
-        "z": "d3bafc4d888d1327",
-        "g": "db0763cc983c9bdb",
-        "name": "error",
-        "func": "var setPoint_Presion = global.get('setPoint_Presion')||-2;\nvar presion = global.get('presion')||0;\nif(setPoint_Presion != -2){\n    // calculo del error \n    var error = setPoint_Presion - presion;\n    msg.payload = error;\n    //guardar el error en variable global\n    global.set('error',error);\n    return msg;\n}",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 250,
-        "y": 320,
-        "wires": [
-            [
-                "1d0ad6849f56b3db"
-            ]
-        ]
-    },
-    {
-        "id": "80f84f7f49f12025",
-        "type": "debug",
-        "z": "d3bafc4d888d1327",
-        "g": "db0763cc983c9bdb",
-        "name": "debug 1",
-        "active": false,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": true,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "payload",
-        "statusType": "auto",
-        "x": 420,
-        "y": 400,
-        "wires": []
-    },
-    {
         "id": "13c685b07e0ef3f5",
         "type": "debug",
         "z": "d3bafc4d888d1327",
@@ -736,15 +696,16 @@
         "id": "40028da2e5251bd1",
         "type": "function",
         "z": "d3bafc4d888d1327",
+        "g": "4e95e1e89e159a2c",
         "name": "PID",
-        "func": "//definicion de la clase PID\nclass PIDController {\n    constructor(Kp, Ki, Kd, minOutput = 0, maxOutput = 1) {\n        // Inicialización de las ganancias PID\n        this.Kp = Kp;\n        this.Ki = Ki;\n        this.Kd = Kd;\n\n        // Inicialización de las variables de estado\n        this.previousError = 0; // Error anterior\n        this.integral = 0;      // Integral acumulada\n\n        // Limites de la salida\n        this.minOutput = minOutput;\n        this.maxOutput = maxOutput;\n    }\n\n    // Método para actualizar las ganancias del PID\n    updateGains(Kp, Ki, Kd) {\n        this.Kp = Kp;\n        this.Ki = Ki;\n        this.Kd = Kd;\n    }\n\n    // Método para calcular el control PID\n    compute(reference, output) {\n        // Calcular el error\n        const error = reference - output;\n\n        // Calcular la parte proporcional\n        const P = this.Kp * error;\n\n        // Acumular el error para la parte integral\n        this.integral += error;  // Acumulación de error\n        const I = this.Ki * this.integral;\n\n        // Calcular la parte derivativa\n        const D = this.Kd * (error - this.previousError);\n\n        // Guardar el error actual para el siguiente ciclo\n        this.previousError = error;\n\n        // Salida sin escalización\n        let rawOutput = P + I + D;\n\n        // Escalizar la salida entre 0 y 1 (usando recorte o mapeo lineal)\n        let scaledOutput = this.scaleOutput(rawOutput);\n\n        return scaledOutput;\n    }\n\n    // Método para escalar la salida\n    scaleOutput(rawOutput) {\n        // Recorte de la salida entre el rango [0, 1]\n        return Math.min(Math.max(rawOutput, this.minOutput), this.maxOutput);\n    }\n}\n\n// codigo a utilizar\n// USO del controlador PID\nvar pid = new PIDController(1.0, 0.1, 0.0);  // Inicializamos el PID con algunas ganancias\n\nvar reference = global.get('setPoint_Presion')||0;  // Valor deseado (referencia)\nvar output = global.get('presion') || 0;  //// Salida inicial del sistema\n \nlet controlSignal = pid.compute(reference, output);\nmsg.payload = controlSignal; //retornar la salida de la accion de control de 0 a 1\nnode.status({fill:\"blue\",shape:\"dot\",text:\"Accion de control \" + controlSignal});\n\nreturn msg;",
+        "func": "//definicion de la clase PID\nclass PIDController {\n    constructor(Kp, Ki, Kd, minOutput = 0, maxOutput = 1) {\n        // Inicialización de las ganancias PID\n        this.Kp = Kp;\n        this.Ki = Ki;\n        this.Kd = Kd;\n\n        // Inicialización de las variables de estado\n        this.previousError = 0; // Error anterior\n        this.integral = 0;      // Integral acumulada\n\n        // Limites de la salida\n        this.minOutput = minOutput;\n        this.maxOutput = maxOutput;\n    }\n\n    // Método para actualizar las ganancias del PID\n    updateGains(Kp, Ki, Kd) {\n        this.Kp = Kp;\n        this.Ki = Ki;\n        this.Kd = Kd;\n    }\n\n    // Método para calcular el control PID\n    compute(reference, output) {\n        // Calcular el error\n        const error = reference - output;\n\n        // Calcular la parte proporcional\n        const P = this.Kp * error;\n\n        // Acumular el error para la parte integral\n        this.integral += error;  // Acumulación de error\n        const I = this.Ki * this.integral;\n\n        // Calcular la parte derivativa\n        const D = this.Kd * (error - this.previousError);\n\n        // Guardar el error actual para el siguiente ciclo\n        this.previousError = error;\n\n        // Salida sin escalización\n        let rawOutput = P + I + D;\n\n        // Escalizar la salida entre 0 y 1 (usando recorte o mapeo lineal)\n        let scaledOutput = this.scaleOutput(rawOutput);\n\n        return scaledOutput;\n    }\n\n    // Método para escalar la salida\n    scaleOutput(rawOutput) {\n        // Recorte de la salida entre el rango [0, 1]\n        return Math.min(Math.max(rawOutput, this.minOutput), this.maxOutput);\n    }\n}\n\n// codigo a utilizar\n// USO del controlador PID\nvar pid = new PIDController(0.00000001, 0.1, 0.0);  // Inicializamos el PID con algunas ganancias\n\nvar reference = global.get('setPoint_Presion')||0;  // Valor deseado (referencia)\nvar output = global.get('presion') || 0;  //// Salida inicial del sistema\n \nvar controlSignal = pid.compute(reference, output);\nmsg.payload = controlSignal; //retornar la salida de la accion de control de 0 a 1\nnode.status({fill:\"blue\",shape:\"dot\",text:\"Accion de control \" + controlSignal});\nfunction acotarADecimales(num, decimales = 4) {\n    return parseFloat(num.toFixed(decimales));\n}\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 370,
-        "y": 540,
+        "x": 250,
+        "y": 480,
         "wires": [
             [
                 "41bafb6a9265fe18"
@@ -755,15 +716,16 @@
         "id": "3dfcc44a8bb60a4c",
         "type": "inject",
         "z": "d3bafc4d888d1327",
-        "name": "0.01",
+        "g": "4e95e1e89e159a2c",
+        "name": "1s",
         "props": [],
-        "repeat": "0.01",
+        "repeat": "1",
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 230,
-        "y": 540,
+        "x": 110,
+        "y": 480,
         "wires": [
             [
                 "40028da2e5251bd1"
@@ -774,6 +736,7 @@
         "id": "41bafb6a9265fe18",
         "type": "function",
         "z": "d3bafc4d888d1327",
+        "g": "4e95e1e89e159a2c",
         "name": "Escalizacion de la Frecuencia",
         "func": "function escalarARPM(valor, rpmMin = 800, rpmMax = 1200) {\n    // Aplicar la fórmula para escalar el valor\n    var rpm = rpmMin + valor * (rpmMax - rpmMin);\n    // Redondear el valor de RPM al número entero más cercano\n    return Math.round(rpm);\n}\nvar entradaPID = msg.payload;\nmsg.payload = escalarARPM(entradaPID,800,1200);\nnode.status({fill:\"blue\",shape:\"dot\",text:\"Entrada :\" + entradaPID + ' Salida : ' + msg.payload});\nreturn msg;",
         "outputs": 1,
@@ -781,8 +744,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 710,
-        "y": 540,
+        "x": 470,
+        "y": 480,
         "wires": [
             [
                 "ce084a61d788b557"
@@ -793,17 +756,107 @@
         "id": "ce084a61d788b557",
         "type": "function",
         "z": "d3bafc4d888d1327",
+        "g": "4e95e1e89e159a2c",
         "name": "Planta Real",
-        "func": "// definicion de variables internas de la discretizacion\nvar yk1 = context.get('yk1','memoryOnly')||0;\nvar yk2 = context.get('yk2','memoryOnly')||0;\nvar uk = msg.payload;//entrada de la salida de frecuencia\nvar uk1 = context.get('uk1','memoryOnly')||0;\nvar uk2 = context.get('uk2','memoryOnly')||0;\n\nvar yk = 1.2315e-5*uk + 2.4629e-5*uk1 + 1.2315e-5*uk2 + 1.9702*yk1 - 0.9704*yk2 ; // con tiempo de 0.01\n\n//guardar los estados anterirores\ncontext.set('yk2',yk1,'memoryOnly');\ncontext.set('yk1',yk,'memoryOnly');\ncontext.set('uk2', uk1,'memoryOnly');\ncontext.set('uk1', uk,'memoryOnly');\ncontext.set('uk',uk,'memoryOnly');\nnode.status({fill:\"blue\",shape:\"dot\",text:\"PIP \" + yk});\nglobal.set('presion',yk);\n// monitoreo de las variables\ncontext.set('monitoreo', {uk, yk},'memoryOnly');\n\nreturn msg;",
+        "func": "// definicion de variables internas de la discretizacion\nvar yk1 = context.get('yk1','memoryOnly')||0;\nvar yk2 = context.get('yk2','memoryOnly')||0;\nvar uk = msg.payload;//entrada de la salida de frecuencia\nvar uk1 = context.get('uk1','memoryOnly')||0;\nvar uk2 = context.get('uk2','memoryOnly')||0;\n\n//var yk = 1.2315e-5*uk + 2.4629e-5*uk1 + 1.2315e-5*uk2 + 1.9702*yk1 - 0.9704*yk2 ; // con tiempo de 0.01s\nvar yk = 0.0417*uk + 0.0833*uk1 + 0.0417*uk2 + 0.3333*yk1 + 0*yk2 ; // con tiempo de 1s\nyk = acotarADecimales(yk,4);\n//guardar los estados anterirores\ncontext.set('yk2',yk1,'memoryOnly');\ncontext.set('yk1',yk,'memoryOnly');\ncontext.set('uk2', uk1,'memoryOnly');\ncontext.set('uk1', uk,'memoryOnly');\ncontext.set('uk',uk,'memoryOnly');\nnode.status({fill:\"blue\",shape:\"dot\",text:\"PIP \" + yk});\nglobal.set('presion',yk);\n// monitoreo de las variables\ncontext.set('monitoreo', {uk, yk},'memoryOnly');\n\nfunction acotarADecimales(num, decimales = 4) {\n    return parseFloat(num.toFixed(decimales));\n}\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 950,
-        "y": 540,
+        "x": 690,
+        "y": 480,
         "wires": [
             []
         ]
+    },
+    {
+        "id": "6b4aadc25a0128ce",
+        "type": "mqtt out",
+        "z": "d3bafc4d888d1327",
+        "g": "c1a6fea6327391ca",
+        "name": "",
+        "topic": "device/MQTTBroker/entrada",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "2cfeb892b2531fe4",
+        "x": 520,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "ccad51975c96c09f",
+        "type": "inject",
+        "z": "d3bafc4d888d1327",
+        "g": "c1a6fea6327391ca",
+        "name": "",
+        "props": [],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 110,
+        "y": 360,
+        "wires": [
+            [
+                "e0a986db8a783db1"
+            ]
+        ]
+    },
+    {
+        "id": "e0a986db8a783db1",
+        "type": "function",
+        "z": "d3bafc4d888d1327",
+        "g": "c1a6fea6327391ca",
+        "name": "Estructurar Data",
+        "func": "// adquision de variables globales\nvar presion = global.get('presion')||0;\nvar setPoint_Presion = global.get('setPoint_Presion')||0;\n\n\nmsg = {\n    'payload':{\n        presion: presion,\n        setPoint_Presion: setPoint_Presion\n    }\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 360,
+        "wires": [
+            [
+                "0d5261c134f74a45",
+                "6b4aadc25a0128ce"
+            ]
+        ]
+    },
+    {
+        "id": "0d5261c134f74a45",
+        "type": "debug",
+        "z": "d3bafc4d888d1327",
+        "g": "c1a6fea6327391ca",
+        "name": "debug 4",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 460,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "8df15cca59401082",
+        "type": "comment",
+        "z": "d3bafc4d888d1327",
+        "g": "c1a6fea6327391ca",
+        "name": "",
+        "info": "tutoriales de donde se saco\nhttps://www.youtube.com/watch?v=oedCiDnIV14&list=PL5_Rrj9tYQAml3cNxw4rlAJL-QyEoNG8b&index=6",
+        "x": 120,
+        "y": 320,
+        "wires": []
     }
 ]
