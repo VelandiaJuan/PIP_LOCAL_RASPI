@@ -98,6 +98,35 @@
         "h": 82
     },
     {
+        "id": "5c23878488aed3ae",
+        "type": "group",
+        "z": "d3bafc4d888d1327",
+        "name": "Recepcion de Data en la nube",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "6ef40822acc1f687",
+            "c07e0ab3c77a38dd",
+            "82f9927c64ddf655",
+            "8bd789448cb5ebb2",
+            "26b63247279de23d"
+        ],
+        "x": 14,
+        "y": 539,
+        "w": 532,
+        "h": 162
+    },
+    {
+        "id": "5aaaf04bcb7e61c3",
+        "type": "ui_tab",
+        "name": "Principal",
+        "icon": "dashboard",
+        "order": 1,
+        "disabled": false,
+        "hidden": false
+    },
+    {
         "id": "83028f5fc4af6c91",
         "type": "ui_base",
         "theme": {
@@ -195,37 +224,6 @@
         }
     },
     {
-        "id": "5aaaf04bcb7e61c3",
-        "type": "ui_tab",
-        "name": "Principal",
-        "icon": "dashboard",
-        "order": 1,
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "d5468e5220cc968f",
-        "type": "ui_group",
-        "name": "Pantalla",
-        "tab": "5aaaf04bcb7e61c3",
-        "order": 1,
-        "disp": false,
-        "width": "12",
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "88cb12c1a31a6f43",
-        "type": "ui_group",
-        "name": "Botones",
-        "tab": "5aaaf04bcb7e61c3",
-        "order": 1,
-        "disp": false,
-        "width": "12",
-        "collapse": false,
-        "className": ""
-    },
-    {
         "id": "a6eb8721741008d0",
         "type": "tls-config",
         "name": "",
@@ -268,12 +266,34 @@
         "sessionExpiry": ""
     },
     {
+        "id": "d656154329cc3bca",
+        "type": "ui_group",
+        "name": "Pantalla",
+        "tab": "5aaaf04bcb7e61c3",
+        "order": 1,
+        "disp": false,
+        "width": "12",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "48d7616710ecee0d",
+        "type": "ui_group",
+        "name": "Configuracion",
+        "tab": "5aaaf04bcb7e61c3",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
         "id": "2cc3886a218bfd36",
         "type": "ui_chart",
         "z": "d3bafc4d888d1327",
         "g": "214bb5bb7c3c748a",
         "name": "",
-        "group": "88cb12c1a31a6f43",
+        "group": "d656154329cc3bca",
         "order": 1,
         "width": 0,
         "height": 0,
@@ -286,7 +306,7 @@
         "dot": false,
         "ymin": "0",
         "ymax": "300",
-        "removeOlder": "2",
+        "removeOlder": "3",
         "removeOlderPoints": "200",
         "removeOlderUnit": "60",
         "cutout": 0,
@@ -403,7 +423,7 @@
         "z": "d3bafc4d888d1327",
         "g": "214bb5bb7c3c748a",
         "name": "",
-        "group": "88cb12c1a31a6f43",
+        "group": "d656154329cc3bca",
         "order": 2,
         "width": 0,
         "height": 0,
@@ -434,7 +454,7 @@
         "name": "",
         "label": "SetPoint de Presión",
         "tooltip": "",
-        "group": "d5468e5220cc968f",
+        "group": "48d7616710ecee0d",
         "order": 1,
         "width": 0,
         "height": 0,
@@ -461,7 +481,7 @@
         "z": "d3bafc4d888d1327",
         "g": "e80ba914f330e4bf",
         "name": "",
-        "group": "d5468e5220cc968f",
+        "group": "48d7616710ecee0d",
         "order": 3,
         "width": 0,
         "height": 0,
@@ -491,7 +511,7 @@
         "z": "d3bafc4d888d1327",
         "g": "e80ba914f330e4bf",
         "name": "",
-        "group": "d5468e5220cc968f",
+        "group": "48d7616710ecee0d",
         "order": 4,
         "width": 0,
         "height": 0,
@@ -585,7 +605,7 @@
         "type": "ui_text",
         "z": "d3bafc4d888d1327",
         "g": "e80ba914f330e4bf",
-        "group": "d5468e5220cc968f",
+        "group": "48d7616710ecee0d",
         "order": 2,
         "width": 0,
         "height": 0,
@@ -858,5 +878,101 @@
         "x": 120,
         "y": 320,
         "wires": []
+    },
+    {
+        "id": "6ef40822acc1f687",
+        "type": "mqtt in",
+        "z": "d3bafc4d888d1327",
+        "g": "5c23878488aed3ae",
+        "name": "",
+        "topic": "device/MQTTBroker/entradaNUBE",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "2cfeb892b2531fe4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 180,
+        "y": 600,
+        "wires": [
+            [
+                "c07e0ab3c77a38dd",
+                "82f9927c64ddf655"
+            ]
+        ]
+    },
+    {
+        "id": "c07e0ab3c77a38dd",
+        "type": "debug",
+        "z": "d3bafc4d888d1327",
+        "g": "5c23878488aed3ae",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 420,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "82f9927c64ddf655",
+        "type": "function",
+        "z": "d3bafc4d888d1327",
+        "g": "5c23878488aed3ae",
+        "name": "Guardar Data",
+        "func": "var data = msg;\nvar ctr = data.payload.ctr\ncontext.set('monitoreo', data, 'memoryOnly');\nglobal.set('ctr', ctr, 'memoryOnly');\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8bd789448cb5ebb2",
+        "type": "inject",
+        "z": "d3bafc4d888d1327",
+        "g": "5c23878488aed3ae",
+        "name": "",
+        "props": [],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 270,
+        "y": 660,
+        "wires": [
+            [
+                "26b63247279de23d"
+            ]
+        ]
+    },
+    {
+        "id": "26b63247279de23d",
+        "type": "function",
+        "z": "d3bafc4d888d1327",
+        "g": "5c23878488aed3ae",
+        "name": "function 3",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 660,
+        "wires": [
+            []
+        ]
     }
 ]
