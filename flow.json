@@ -67,13 +67,14 @@
         "nodes": [
             "3dfcc44a8bb60a4c",
             "41bafb6a9265fe18",
-            "ce084a61d788b557",
             "a66b3bd8b9f29456",
-            "0b55eb6cceaa272e"
+            "0b55eb6cceaa272e",
+            "4ae8f17581c7337b",
+            "ce084a61d788b557"
         ],
         "x": 34,
         "y": 299,
-        "w": 1192,
+        "w": 1392,
         "h": 162
     },
     {
@@ -328,7 +329,7 @@
         "nodata": "",
         "dot": false,
         "ymin": "0",
-        "ymax": "300",
+        "ymax": "450",
         "removeOlder": "3",
         "removeOlderPoints": "200",
         "removeOlderUnit": "60",
@@ -485,8 +486,8 @@
         "outs": "all",
         "topic": "topic",
         "topicType": "msg",
-        "min": "200",
-        "max": "250",
+        "min": "100",
+        "max": "400",
         "step": "1",
         "className": "",
         "x": 440,
@@ -770,26 +771,6 @@
         "x": 910,
         "y": 340,
         "wires": [
-            [
-                "ce084a61d788b557"
-            ]
-        ]
-    },
-    {
-        "id": "ce084a61d788b557",
-        "type": "function",
-        "z": "d3bafc4d888d1327",
-        "g": "4e95e1e89e159a2c",
-        "name": "Planta Real",
-        "func": "// definicion de variables internas de la discretizacion\nvar yk1 = context.get('yk1','memoryOnly')||0;\nvar yk2 = context.get('yk2','memoryOnly')||0;\nvar uk = msg.payload;//entrada de la salida de frecuencia\nvar uk1 = context.get('uk1','memoryOnly')||0;\nvar uk2 = context.get('uk2','memoryOnly')||0;\n\n//var yk = 1.2315e-5*uk + 2.4629e-5*uk1 + 1.2315e-5*uk2 + 1.9702*yk1 - 0.9704*yk2 ; // con tiempo de 0.01s\nvar yk = 0.0417*uk + 0.0833*uk1 + 0.0417*uk2 + 0.3333*yk1 + 0*yk2 ; // con tiempo de 1s\nyk = acotarADecimales(yk,4);\n//guardar los estados anterirores\ncontext.set('yk2',yk1,'memoryOnly');\ncontext.set('yk1',yk,'memoryOnly');\ncontext.set('uk2', uk1,'memoryOnly');\ncontext.set('uk1', uk,'memoryOnly');\ncontext.set('uk',uk,'memoryOnly');\nnode.status({fill:\"blue\",shape:\"dot\",text:\"PIP \" + yk});\nglobal.set('presion',yk);\n// monitoreo de las variables\ncontext.set('monitoreo', {uk, yk},'memoryOnly');\n\nfunction acotarADecimales(num, decimales = 4) {\n    return parseFloat(num.toFixed(decimales));\n}\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1130,
-        "y": 340,
-        "wires": [
             []
         ]
     },
@@ -1041,6 +1022,50 @@
             [
                 "41bafb6a9265fe18"
             ]
+        ]
+    },
+    {
+        "id": "4ae8f17581c7337b",
+        "type": "inject",
+        "z": "d3bafc4d888d1327",
+        "g": "4e95e1e89e159a2c",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "30",
+        "payloadType": "num",
+        "x": 980,
+        "y": 380,
+        "wires": [
+            [
+                "ce084a61d788b557"
+            ]
+        ]
+    },
+    {
+        "id": "ce084a61d788b557",
+        "type": "function",
+        "z": "d3bafc4d888d1327",
+        "g": "4e95e1e89e159a2c",
+        "name": "Planta Real",
+        "func": "// definicion de variables internas de la discretizacion\nvar yk1 = context.get('yk1','memoryOnly')||0;\nvar yk2 = context.get('yk2','memoryOnly')||0;\nvar entradaControl = msg.payload;//entrada de control\nvar uk = 1/(entradaControl*entradaControl);//Conversion de frecuencia de entrada\nvar uk1 = context.get('uk1','memoryOnly')||0;\nvar uk2 = context.get('uk2','memoryOnly')||0;\n\n//var yk = 1.2315e-5*uk + 2.4629e-5*uk1 + 1.2315e-5*uk2 + 1.9702*yk1 - 0.9704*yk2 ; // con tiempo de 0.01s\n// var yk = 0.0417*uk + 0.0833*uk1 + 0.0417*uk2 + 0.3333*yk1 + 0*yk2 ; // con tiempo de 1s\nvar yk = 60e3*uk + 120e3*uk1 + 60e3*uk2 + 0.33333*yk1 -0*yk2 ; // con tiempo de 1s\nyk = acotarADecimales(yk,4);\n//guardar los estados anterirores\ncontext.set('yk2',yk1,'memoryOnly');\ncontext.set('yk1',yk,'memoryOnly');\ncontext.set('uk2', uk1,'memoryOnly');\ncontext.set('uk1', uk,'memoryOnly');\ncontext.set('uk',uk,'memoryOnly');\nnode.status({fill:\"blue\",shape:\"dot\",text:\"PIP \" + yk});\nglobal.set('presion',yk);\n// monitoreo de las variables\ncontext.set('monitoreo', {uk, yk},'memoryOnly');\n\nfunction acotarADecimales(num, decimales = 4) {\n    return parseFloat(num.toFixed(decimales));\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1330,
+        "y": 340,
+        "wires": [
+            []
         ]
     }
 ]
