@@ -2,7 +2,7 @@
     {
         "id": "d3bafc4d888d1327",
         "type": "tab",
-        "label": "Control en la NUBE",
+        "label": "Planta Local",
         "disabled": false,
         "info": "",
         "env": []
@@ -55,6 +55,47 @@
         "h": 182
     },
     {
+        "id": "4e95e1e89e159a2c",
+        "type": "group",
+        "z": "d3bafc4d888d1327",
+        "name": "Planta",
+        "style": {
+            "label": true,
+            "stroke": "#000000",
+            "color": "#000000"
+        },
+        "nodes": [
+            "40028da2e5251bd1",
+            "3dfcc44a8bb60a4c",
+            "41bafb6a9265fe18",
+            "ce084a61d788b557",
+            "a66b3bd8b9f29456",
+            "b233bbf463efa21f"
+        ],
+        "x": 14,
+        "y": 279,
+        "w": 1212,
+        "h": 142
+    },
+    {
+        "id": "46ca1a28cf2e749b",
+        "type": "group",
+        "z": "d3bafc4d888d1327",
+        "name": "MQTT Recepcion",
+        "style": {
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "c1a6fea6327391ca",
+            "5c23878488aed3ae"
+        ],
+        "x": 8,
+        "y": 433,
+        "w": 1244,
+        "h": 234
+    },
+    {
         "id": "c1a6fea6327391ca",
         "type": "group",
         "z": "d3bafc4d888d1327",
@@ -72,31 +113,9 @@
             "0d5261c134f74a45",
             "8df15cca59401082"
         ],
-        "x": 74,
-        "y": 619,
+        "x": 34,
+        "y": 459,
         "w": 652,
-        "h": 142
-    },
-    {
-        "id": "4e95e1e89e159a2c",
-        "type": "group",
-        "z": "d3bafc4d888d1327",
-        "name": "Planta",
-        "style": {
-            "label": true,
-            "stroke": "#000000",
-            "color": "#000000"
-        },
-        "nodes": [
-            "40028da2e5251bd1",
-            "3dfcc44a8bb60a4c",
-            "41bafb6a9265fe18",
-            "ce084a61d788b557",
-            "a66b3bd8b9f29456"
-        ],
-        "x": 114,
-        "y": 279,
-        "w": 1132,
         "h": 142
     },
     {
@@ -117,28 +136,10 @@
             "8bd789448cb5ebb2",
             "26b63247279de23d"
         ],
-        "x": 734,
-        "y": 619,
+        "x": 694,
+        "y": 459,
         "w": 532,
         "h": 182
-    },
-    {
-        "id": "46ca1a28cf2e749b",
-        "type": "group",
-        "z": "d3bafc4d888d1327",
-        "name": "MQTT Recepcion",
-        "style": {
-            "label": true,
-            "color": "#000000"
-        },
-        "nodes": [
-            "c1a6fea6327391ca",
-            "5c23878488aed3ae"
-        ],
-        "x": 48,
-        "y": 593,
-        "w": 1244,
-        "h": 234
     },
     {
         "id": "5aaaf04bcb7e61c3",
@@ -767,7 +768,7 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 210,
+        "x": 110,
         "y": 380,
         "wires": [
             [
@@ -787,7 +788,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 870,
+        "x": 850,
         "y": 320,
         "wires": [
             [
@@ -807,8 +808,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1150,
-        "y": 320,
+        "x": 1130,
+        "y": 340,
         "wires": [
             []
         ]
@@ -828,8 +829,8 @@
         "correl": "",
         "expiry": "",
         "broker": "2cfeb892b2531fe4",
-        "x": 580,
-        "y": 660,
+        "x": 540,
+        "y": 500,
         "wires": []
     },
     {
@@ -844,8 +845,8 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 170,
-        "y": 700,
+        "x": 130,
+        "y": 540,
         "wires": [
             [
                 "e0a986db8a783db1"
@@ -858,14 +859,14 @@
         "z": "d3bafc4d888d1327",
         "g": "c1a6fea6327391ca",
         "name": "Estructurar Data",
-        "func": "// adquision de variables globales\nvar presion = global.get('presion')||0;\nvar setPoint_Presion = global.get('setPoint_Presion')||0;\n\n\nmsg = {\n    'payload':{\n        presion: presion,\n        setPoint_Presion: setPoint_Presion\n    }\n}\nreturn msg;",
+        "func": "// adquision de variables globales\nvar presion = global.get('presion')||0;\nvar setPoint_Presion = global.get('setPoint_Presion')||0;\n\nvar ctr = context.get('ctr', 'memoryOnly') || 0;\nctr++;\nif (ctr > 10) {\n    ctr = 0;\n}\nnode.status({ fill: \"red\", shape: \"ring\", text: \"ctr \" + ctr });\ncontext.set('ctr', ctr, 'memoryOnly');\n\nmsg = {\n    'payload':{\n        presion,\n        setPoint_Presion,\n        ctr\n    }\n}\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 350,
-        "y": 700,
+        "x": 310,
+        "y": 540,
         "wires": [
             [
                 "0d5261c134f74a45",
@@ -887,8 +888,8 @@
         "targetType": "full",
         "statusVal": "payload",
         "statusType": "auto",
-        "x": 520,
-        "y": 720,
+        "x": 480,
+        "y": 560,
         "wires": []
     },
     {
@@ -898,8 +899,8 @@
         "g": "c1a6fea6327391ca",
         "name": "",
         "info": "tutoriales de donde se saco\nhttps://www.youtube.com/watch?v=oedCiDnIV14&list=PL5_Rrj9tYQAml3cNxw4rlAJL-QyEoNG8b&index=6",
-        "x": 180,
-        "y": 660,
+        "x": 140,
+        "y": 500,
         "wires": []
     },
     {
@@ -916,8 +917,8 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 900,
-        "y": 680,
+        "x": 860,
+        "y": 520,
         "wires": [
             [
                 "c07e0ab3c77a38dd",
@@ -938,8 +939,8 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1140,
-        "y": 660,
+        "x": 1100,
+        "y": 500,
         "wires": []
     },
     {
@@ -954,8 +955,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1160,
-        "y": 700,
+        "x": 1120,
+        "y": 540,
         "wires": [
             []
         ]
@@ -972,8 +973,8 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "x": 830,
-        "y": 760,
+        "x": 790,
+        "y": 600,
         "wires": [
             [
                 "26b63247279de23d"
@@ -992,8 +993,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 980,
-        "y": 760,
+        "x": 940,
+        "y": 600,
         "wires": [
             []
         ]
@@ -1017,13 +1018,35 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 380,
+        "x": 360,
         "y": 380,
         "wires": [
             [
                 "40028da2e5251bd1"
             ],
-            []
+            [
+                "b233bbf463efa21f"
+            ]
+        ]
+    },
+    {
+        "id": "b233bbf463efa21f",
+        "type": "function",
+        "z": "d3bafc4d888d1327",
+        "g": "4e95e1e89e159a2c",
+        "name": "function 3",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 380,
+        "wires": [
+            [
+                "ce084a61d788b557"
+            ]
         ]
     }
 ]
