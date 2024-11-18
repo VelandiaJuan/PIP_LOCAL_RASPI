@@ -65,17 +65,16 @@
             "color": "#000000"
         },
         "nodes": [
-            "40028da2e5251bd1",
             "3dfcc44a8bb60a4c",
             "41bafb6a9265fe18",
             "ce084a61d788b557",
             "a66b3bd8b9f29456",
-            "b233bbf463efa21f"
+            "0b55eb6cceaa272e"
         ],
         "x": 34,
         "y": 299,
-        "w": 1212,
-        "h": 142
+        "w": 1192,
+        "h": 162
     },
     {
         "id": "46ca1a28cf2e749b",
@@ -737,26 +736,6 @@
         "wires": []
     },
     {
-        "id": "40028da2e5251bd1",
-        "type": "function",
-        "z": "d3bafc4d888d1327",
-        "g": "4e95e1e89e159a2c",
-        "name": "PID",
-        "func": "//definicion de la clase PID\nclass PIDController {\n    constructor(Kp, Ki, Kd, minOutput = 0, maxOutput = 1) {\n        // Inicialización de las ganancias PID\n        this.Kp = Kp;\n        this.Ki = Ki;\n        this.Kd = Kd;\n\n        // Inicialización de las variables de estado\n        this.previousError = 0; // Error anterior\n        this.integral = 0;      // Integral acumulada\n\n        // Limites de la salida\n        this.minOutput = minOutput;\n        this.maxOutput = maxOutput;\n    }\n\n    // Método para actualizar las ganancias del PID\n    updateGains(Kp, Ki, Kd) {\n        this.Kp = Kp;\n        this.Ki = Ki;\n        this.Kd = Kd;\n    }\n\n    // Método para calcular el control PID\n    compute(reference, output) {\n        // Calcular el error\n        const error = reference - output;\n\n        // Calcular la parte proporcional\n        const P = this.Kp * error;\n\n        // Acumular el error para la parte integral\n        this.integral += error;  // Acumulación de error\n        const I = this.Ki * this.integral;\n\n        // Calcular la parte derivativa\n        const D = this.Kd * (error - this.previousError);\n\n        // Guardar el error actual para el siguiente ciclo\n        this.previousError = error;\n\n        // Salida sin escalización\n        let rawOutput = P + I + D;\n\n        // Escalizar la salida entre 0 y 1 (usando recorte o mapeo lineal)\n        let scaledOutput = this.scaleOutput(rawOutput);\n\n        return scaledOutput;\n    }\n\n    // Método para escalar la salida\n    scaleOutput(rawOutput) {\n        // Recorte de la salida entre el rango [0, 1]\n        return Math.min(Math.max(rawOutput, this.minOutput), this.maxOutput);\n    }\n}\n\n// codigo a utilizar\n// USO del controlador PID\nvar pid = new PIDController(0.00000001, 0.1, 0.0);  // Inicializamos el PID con algunas ganancias\n\nvar reference = global.get('setPoint_Presion')||0;  // Valor deseado (referencia)\nvar output = global.get('presion') || 0;  //// Salida inicial del sistema\n \nvar controlSignal = pid.compute(reference, output);\nmsg.payload = controlSignal; //retornar la salida de la accion de control de 0 a 1\nnode.status({fill:\"blue\",shape:\"dot\",text:\"Accion de control \" + controlSignal});\nfunction acotarADecimales(num, decimales = 4) {\n    return parseFloat(num.toFixed(decimales));\n}\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 550,
-        "y": 340,
-        "wires": [
-            [
-                "41bafb6a9265fe18"
-            ]
-        ]
-    },
-    {
         "id": "3dfcc44a8bb60a4c",
         "type": "inject",
         "z": "d3bafc4d888d1327",
@@ -769,7 +748,7 @@
         "onceDelay": 0.1,
         "topic": "",
         "x": 130,
-        "y": 400,
+        "y": 420,
         "wires": [
             [
                 "a66b3bd8b9f29456"
@@ -788,7 +767,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 870,
+        "x": 910,
         "y": 340,
         "wires": [
             [
@@ -808,8 +787,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1150,
-        "y": 360,
+        "x": 1130,
+        "y": 340,
         "wires": [
             []
         ]
@@ -1019,32 +998,49 @@
         "repair": false,
         "outputs": 2,
         "x": 380,
-        "y": 400,
+        "y": 420,
         "wires": [
             [
-                "40028da2e5251bd1"
+                "0b55eb6cceaa272e"
             ],
-            [
-                "b233bbf463efa21f"
-            ]
+            []
         ]
     },
     {
-        "id": "b233bbf463efa21f",
+        "id": "c960baa7bcea0ff2",
+        "type": "inject",
+        "z": "d3bafc4d888d1327",
+        "name": "",
+        "props": [],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 490,
+        "y": 800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0b55eb6cceaa272e",
         "type": "function",
         "z": "d3bafc4d888d1327",
         "g": "4e95e1e89e159a2c",
-        "name": "function 3",
-        "func": "\nreturn msg;",
+        "name": "PID Vergatario",
+        "func": "class PID {\n    constructor(Kp, Ki, Kd, sampleTime = 1, outputMin = 0, outputMax = 1) {\n        this.Kp = Kp;  // Ganancia proporcional\n        this.Ki = Ki;  // Ganancia integral\n        this.Kd = Kd;  // Ganancia derivativa\n        this.sampleTime = sampleTime; // Tiempo de muestreo (en segundos)\n        this.outputMin = outputMin;  // Límite inferior de la salida\n        this.outputMax = outputMax;  // Límite superior de la salida\n\n        // Arreglos para almacenar los errores\n        this.errors = [];  // Array que almacenará todos los errores en el tiempo\n        this.integral = 0;  // Integral acumulada\n    }\n\n    // Función para calcular la salida del controlador PID\n    compute(setpoint, measuredValue) {\n        // Error actual\n        let error = setpoint - measuredValue;\n\n        // Agregar el error actual al arreglo de errores\n        this.errors.push(error);\n\n        // Calcular la integral (suma de todos los errores)\n        this.integral = this.errors.reduce((sum, currentError) => sum + currentError, 0);\n\n        // Derivativo: diferencia del error actual con el error anterior\n        let derivative = (this.errors[this.errors.length - 1] - (this.errors[this.errors.length - 2] || 0)) / this.sampleTime;\n\n        // Salida PID\n        let output = this.Kp * error + this.Ki * this.integral + this.Kd * derivative;\n\n        // Saturar la salida entre outputMin y outputMax (0 a 1 en este caso)\n        output = Math.max(this.outputMin, Math.min(output, this.outputMax));\n\n        return output;\n    }\n}\n\n// Ejemplo de uso:\n\n// Parámetros del PID (ajústalos según sea necesario)\nvar Kp = 1.0;\nvar Ki = 0.1;\nvar Kd = 0.0;\nvar pid = context.get('pid')||-2;\nif(pid == -2){\n    // Crear un controlador PID\n    pid = new PID(Kp, Ki, Kd);\n}\n\n\nvar reference = global.get('setPoint_Presion') || 0;  // Valor deseado (referencia)\nvar output = global.get('presion') || 0;  //// Salida inicial del sistema\n\n\n// Parámetros de entrada\nlet setpoint = reference;  // Valor objetivo (referencia)\nlet measuredValue = output;  // Valor medido\n\n// Calcular la salida del PID\nlet controlSignal = pid.compute(setpoint, measuredValue);\nmsg.payload = controlSignal;\n\ncontext.set('monitoreo',{controlSignal});\ncontext.set('pid', pid);\nnode.status({fill:\"red\",shape:\"ring\",text:\"controlkSignal \" + controlSignal});\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 720,
-        "y": 400,
+        "x": 640,
+        "y": 340,
         "wires": [
-            []
+            [
+                "41bafb6a9265fe18"
+            ]
         ]
     }
 ]
