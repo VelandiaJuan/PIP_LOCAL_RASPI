@@ -69,11 +69,12 @@
             "a66b3bd8b9f29456",
             "ce084a61d788b557",
             "7bdac0345f2d726d",
-            "cee40702d7c80195"
+            "cee40702d7c80195",
+            "76a48c26b1688552"
         ],
         "x": 34,
         "y": 299,
-        "w": 872,
+        "w": 1072,
         "h": 162
     },
     {
@@ -991,7 +992,7 @@
         "z": "d3bafc4d888d1327",
         "g": "4e95e1e89e159a2c",
         "name": "Planta Real",
-        "func": "// definicion de variables internas de la discretizacion\nvar uk = msg.payload;//Conversion de frecuencia de entrada\nvar yk1 = flow.get('Planta.yk1','memoryOnly')||0;\nvar yk2 = flow.get('Planta.yk2','memoryOnly')||0;\n\nvar uk1 = flow.get('Planta.uk1','memoryOnly')||0;\nvar uk2 = flow.get('Planta.uk2','memoryOnly')||0;\n\n// var yk = 0.0417*uk + 0.0833*uk1 + 0.0417*uk2 + 0.3333*yk1 + 0*yk2 ; // con tiempo de 1s\nvar yk = 60e3*uk + 120e3*uk1 + 60e3*uk2 + 0.33333*yk1 -0*yk2 ; // con tiempo de 1s\nyk = acotarADecimales(yk,4);\n//guardar los estados anterirores\n\nvar Planta = { yk2:yk1,yk1:yk,uk2:uk1,uk1:uk};\nflow.set('Planta',Planta,'memoryOnly');\n\nnode.status({fill:\"blue\",shape:\"dot\",text:\"PIP \" + yk});\nglobal.set('presion',yk);\n\nfunction acotarADecimales(num, decimales = 4) {\n    return parseFloat(num.toFixed(decimales));\n}\nreturn msg;",
+        "func": "// definicion de variables internas de la discretizacion\nvar uk = msg.payload;//Conversion de frecuencia de entrada\nvar yk1 = flow.get('Planta.yk1','memoryOnly')||0;\nvar yk2 = flow.get('Planta.yk2','memoryOnly')||0;\n\nvar uk1 = flow.get('Planta.uk1','memoryOnly')||0;\nvar uk2 = flow.get('Planta.uk2','memoryOnly')||0;\n\n// var yk = 0.0417*uk + 0.0833*uk1 + 0.0417*uk2 + 0.3333*yk1 + 0*yk2 ; // con tiempo de 1s\nvar yk = 60e3*uk + 120e3*uk1 + 60e3*uk2 + 0.33333*yk1 -0*yk2 ; // con tiempo de 1s\nyk = acotarADecimales(yk,4);\nmsg.payload = yk;//enviar a HMI\n//guardar los estados anterirores\nvar Planta = { yk2:yk1,yk1:yk,uk2:uk1,uk1:uk};\nflow.set('Planta',Planta,'memoryOnly');\n\nnode.status({fill:\"blue\",shape:\"dot\",text:\"PIP \" + yk});\nglobal.set('presion',yk);\n\nfunction acotarADecimales(num, decimales = 4) {\n    return parseFloat(num.toFixed(decimales));\n}\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1000,7 +1001,9 @@
         "x": 810,
         "y": 380,
         "wires": [
-            []
+            [
+                "76a48c26b1688552"
+            ]
         ]
     },
     {
@@ -1092,5 +1095,27 @@
         "wires": [
             []
         ]
+    },
+    {
+        "id": "76a48c26b1688552",
+        "type": "ui_text",
+        "z": "d3bafc4d888d1327",
+        "g": "4e95e1e89e159a2c",
+        "group": "48d7616710ecee0d",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "PIP Actual",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 1010,
+        "y": 380,
+        "wires": []
     }
 ]
