@@ -68,12 +68,13 @@
             "3dfcc44a8bb60a4c",
             "a66b3bd8b9f29456",
             "ce084a61d788b557",
-            "7bdac0345f2d726d"
+            "7bdac0345f2d726d",
+            "cee40702d7c80195"
         ],
         "x": 34,
-        "y": 339,
-        "w": 992,
-        "h": 122
+        "y": 299,
+        "w": 872,
+        "h": 162
     },
     {
         "id": "46ca1a28cf2e749b",
@@ -138,6 +139,23 @@
         "y": 499,
         "w": 532,
         "h": 182
+    },
+    {
+        "id": "e693d1e88a08e6de",
+        "type": "group",
+        "z": "d3bafc4d888d1327",
+        "name": "Eliminar Variables",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "abeb3817066df2d9",
+            "a5a1e82fc248037c"
+        ],
+        "x": 34,
+        "y": 739,
+        "w": 402,
+        "h": 82
     },
     {
         "id": "5aaaf04bcb7e61c3",
@@ -968,53 +986,19 @@
         ]
     },
     {
-        "id": "c960baa7bcea0ff2",
-        "type": "inject",
-        "z": "d3bafc4d888d1327",
-        "name": "",
-        "props": [],
-        "repeat": "1",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "x": 490,
-        "y": 800,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "ce084a61d788b557",
         "type": "function",
         "z": "d3bafc4d888d1327",
         "g": "4e95e1e89e159a2c",
         "name": "Planta Real",
-        "func": "// definicion de variables internas de la discretizacion\nvar yk1 = context.get('yk1','memoryOnly')||0;\nvar yk2 = context.get('yk2','memoryOnly')||0;\nvar entradaControl = msg.payload;//entrada de control\nvar uk = entradaControl;//Conversion de frecuencia de entrada\nvar uk1 = context.get('uk1','memoryOnly')||0;\nvar uk2 = context.get('uk2','memoryOnly')||0;\n\n//var yk = 1.2315e-5*uk + 2.4629e-5*uk1 + 1.2315e-5*uk2 + 1.9702*yk1 - 0.9704*yk2 ; // con tiempo de 0.01s\n// var yk = 0.0417*uk + 0.0833*uk1 + 0.0417*uk2 + 0.3333*yk1 + 0*yk2 ; // con tiempo de 1s\nvar yk = 60e3*uk + 120e3*uk1 + 60e3*uk2 + 0.33333*yk1 -0*yk2 ; // con tiempo de 1s\nyk = acotarADecimales(yk,4);\n//guardar los estados anterirores\ncontext.set('yk2',yk1,'memoryOnly');\ncontext.set('yk1',yk,'memoryOnly');\ncontext.set('uk2', uk1,'memoryOnly');\ncontext.set('uk1', uk,'memoryOnly');\ncontext.set('uk',uk,'memoryOnly');\nnode.status({fill:\"blue\",shape:\"dot\",text:\"PIP \" + yk});\nglobal.set('presion',yk);\n// monitoreo de las variables\ncontext.set('monitoreo', {uk, yk},'memoryOnly');\n\nfunction acotarADecimales(num, decimales = 4) {\n    return parseFloat(num.toFixed(decimales));\n}\nreturn msg;",
+        "func": "// definicion de variables internas de la discretizacion\nvar uk = msg.payload;//Conversion de frecuencia de entrada\nvar yk1 = flow.get('Planta.yk1','memoryOnly')||0;\nvar yk2 = flow.get('Planta.yk2','memoryOnly')||0;\n\nvar uk1 = flow.get('Planta.uk1','memoryOnly')||0;\nvar uk2 = flow.get('Planta.uk2','memoryOnly')||0;\n\n// var yk = 0.0417*uk + 0.0833*uk1 + 0.0417*uk2 + 0.3333*yk1 + 0*yk2 ; // con tiempo de 1s\nvar yk = 60e3*uk + 120e3*uk1 + 60e3*uk2 + 0.33333*yk1 -0*yk2 ; // con tiempo de 1s\nyk = acotarADecimales(yk,4);\n//guardar los estados anterirores\n\nvar Planta = { yk2:yk1,yk1:yk,uk2:uk1,uk1:uk};\nflow.set('Planta',Planta,'memoryOnly');\n\nnode.status({fill:\"blue\",shape:\"dot\",text:\"PIP \" + yk});\nglobal.set('presion',yk);\n\nfunction acotarADecimales(num, decimales = 4) {\n    return parseFloat(num.toFixed(decimales));\n}\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 930,
+        "x": 810,
         "y": 380,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "41bafb6a9265fe18",
-        "type": "function",
-        "z": "d3bafc4d888d1327",
-        "name": "Escalizacion de la Frecuencia",
-        "func": "function escalarARPM(valor, rpmMin = 800, rpmMax = 1200) {\n    // Aplicar la fórmula para escalar el valor\n    var rpm = rpmMin + valor * (rpmMax - rpmMin);\n    // Redondear el valor de RPM al número entero más cercano\n    return Math.round(rpm);\n}\nvar entradaPID = msg.payload;\nmsg.payload = escalarARPM(entradaPID,800,1200);\nnode.status({fill:\"blue\",shape:\"dot\",text:\"Entrada :\" + entradaPID + ' Salida : ' + msg.payload});\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1110,
-        "y": 820,
         "wires": [
             []
         ]
@@ -1025,7 +1009,7 @@
         "z": "d3bafc4d888d1327",
         "g": "4e95e1e89e159a2c",
         "name": "PID",
-        "func": "// traer los parametros globales\nvar reference = global.get('setPoint_Presion') || 0;  // Valor deseado (referencia)\nvar output = global.get('presion') || 0;  //// Salida inicial del sistema\n\n//Traer los parametros anteriores\nvar uk = reference- output;//entrada del sistema \nvar uk1 = flow.get('uk1')||0;\nvar yk = 0;\nvar yk1 = flow.get('yk1')||0;\n\n// % Parámetros del controlador PID\nvar Kp = 5.27e-6;\nvar Ki = 5.15e-6;\nvar Kd = 1.14e-6;\nvar Tf = 0.00619;\nvar T = 1; //% Tiempo de muestreo(s)\n\n\n// % Término Proporcional\nvar b0_p = Kp;\n\n// % Término Integral\nvar b0_i = Ki * T / 2;\nvar b1_i = Ki * T / 2;\n\n// % Término Derivativo\nvar b0_d = 2 * Kd / T;\nvar b1_d = -2 * Kd / T;\nvar a1_d = (1 - Tf * 2 / T) / (1 + Tf * 2 / T);\n\n// % Proporcional\nvar y_p = b0_p * uk;\n    \n// % Integral\nvar y_i = b0_i * uk + b1_i * uk1 + yk1;\n\n//     % Proporcional\ny_p = b0_p * uk;\n\n// % Integral\ny_i = b0_i * uk + b1_i * uk1 + yk;\n\n\n// % Derivativo\nvar y_d = b0_d * uk + b1_d * uk-1 - a1_d * yk;\n\n// % Salida total\nyk = y_p + y_i + y_d;\nmsg.payload = yk;\n//visualizacion de nodo\nnode.status({fill:\"blue\",shape:\"dot\",text:\"PID\" + yk});\nflow.set('yk1',yk);\nflow.set('uk1',uk);\ncontext.set('monitoreo', { ctsProporcional: { b0_p }, ctsIntegrales: { b0_i, b1_i }, ctsDerivativas: { b0_d, b1_d, a1_d}},'memoryOnly');\n\nreturn msg;",
+        "func": "// traer los parametros globales\nvar reference = global.get('setPoint_Presion') || 0;  // Valor deseado (referencia)\nvar output = global.get('presion') || 0;  //// Salida inicial del sistema\n\n//Traer los parametros anteriores\nvar uk = Math.abs(reference- output);//entrada del sistema \nvar uk1 = flow.get('uk1')||0;\nvar yk = 0;\nvar yk1 = flow.get('yk1')||0;\n\n// % Parámetros del controlador PID\nvar Kp = 5.27e-6;\nvar Ki = 5.15e-6;\nvar Kd = 1.14e-6;\nvar Tf = 0.00619;\nvar T = 1; //% Tiempo de muestreo(s)\n\n\n// % Término Proporcional\nvar b0_p = Kp;\n\n// % Término Integral\nvar b0_i = Ki * T / 2;\nvar b1_i = Ki * T / 2;\n\n// % Término Derivativo\nvar b0_d = 2 * Kd / T;\nvar b1_d = -2 * Kd / T;\nvar a1_d = (1 - Tf * 2 / T) / (1 + Tf * 2 / T);\n\n// % Proporcional\nvar y_p = b0_p * uk;\n    \n// % Integral\nvar y_i = b0_i * uk + b1_i * uk1 + yk1;\n\n//     % Proporcional\ny_p = b0_p * uk;\n\n// % Integral\ny_i = b0_i * uk + b1_i * uk1 + yk;\n\n\n// % Derivativo\nvar y_d = b0_d * uk + b1_d * uk1 - a1_d * yk;\n\n// % Salida total\nyk = y_p + y_i + y_d;\nmsg.payload = yk;\n//visualizacion de nodo\nnode.status({fill:\"blue\",shape:\"dot\",text:\"PID\" + yk});\nflow.set('yk1',yk);\nflow.set('uk1',uk);\ncontext.set('monitoreo', { ctsProporcional: { b0_p }, ctsIntegrales: { b0_i, b1_i }, ctsDerivativas: { b0_d, b1_d, a1_d}},'memoryOnly');\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -1037,6 +1021,76 @@
             [
                 "ce084a61d788b557"
             ]
+        ]
+    },
+    {
+        "id": "cee40702d7c80195",
+        "type": "comment",
+        "z": "d3bafc4d888d1327",
+        "g": "4e95e1e89e159a2c",
+        "name": "PID Matlab",
+        "info": "% Parámetros del controlador PID\nKp = 5.27e-6;\nKi = 5.15e-6;\nKd = 1.14e-6;\nTf = 0.00619;\nT = 1; % Tiempo de muestreo (s)\n\n% Término Proporcional\nb0_p = Kp;\n\n% Término Integral\nb0_i = Ki * T / 2;\nb1_i = Ki * T / 2;\n\n% Término Derivativo\nb0_d = 2 * Kd / T;\nb1_d = -2 * Kd / T;\na1_d = (1 - Tf * 2 / T) / (1 + Tf * 2 / T);\n\n% Simulación del sistema con entrada escalón\nN = 100; % Número de muestras\nu = ones(1, N); % Entrada escalón\ny = zeros(1, N); % Salida inicializada\n\nfor k = 2:N\n    % Proporcional\n    y_p = b0_p * u(k);\n    \n    % Integral\n    if k > 1\n        y_i = b0_i * u(k) + b1_i * u(k-1) + y(k-1);\n    else\n        y_i = 0;\n    end\n    \n    % Derivativo\n    if k > 1\n        y_d = b0_d * u(k) + b1_d * u(k-1) - a1_d * y(k-1);\n    else\n        y_d = 0;\n    end\n    \n    % Salida total\n    y(k) = y_p + y_i + y_d;\nend\n\n% Graficar la respuesta\nfigure;\nplot(1:N, y, 'b', 'LineWidth', 1.5);\ntitle('Respuesta del Controlador PID Discreto');\nxlabel('Muestras (k)');\nylabel('Salida y[k]');\ngrid on",
+        "x": 600,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "abeb3817066df2d9",
+        "type": "inject",
+        "z": "d3bafc4d888d1327",
+        "g": "e693d1e88a08e6de",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 130,
+        "y": 780,
+        "wires": [
+            [
+                "a5a1e82fc248037c"
+            ]
+        ]
+    },
+    {
+        "id": "a5a1e82fc248037c",
+        "type": "change",
+        "z": "d3bafc4d888d1327",
+        "g": "e693d1e88a08e6de",
+        "name": "",
+        "rules": [
+            {
+                "t": "delete",
+                "p": "presion",
+                "pt": "global"
+            },
+            {
+                "t": "delete",
+                "p": "uk1",
+                "pt": "flow"
+            },
+            {
+                "t": "delete",
+                "p": "yk1",
+                "pt": "flow"
+            },
+            {
+                "t": "delete",
+                "p": "#:(memoryOnly)::Planta",
+                "pt": "flow"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 330,
+        "y": 780,
+        "wires": [
+            []
         ]
     }
 ]
